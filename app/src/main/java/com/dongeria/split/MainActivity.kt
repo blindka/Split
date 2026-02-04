@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.unit.dp
 
 
 class MainActivity : ComponentActivity() {
@@ -111,9 +110,9 @@ fun EditNumberField(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         shape = RoundedCornerShape(16.dp),
         colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent
+            focusedIndicatorColor = Color.Transparent, // color of underline when it is in focus (user press the box and typing)
+            unfocusedIndicatorColor = Color.Transparent, // color of underline when it isn't in focus
+            disabledIndicatorColor = Color.Transparent // color of underline when the field is shut down
         ),
         modifier = modifier.shadow(
             elevation = 12.dp,
