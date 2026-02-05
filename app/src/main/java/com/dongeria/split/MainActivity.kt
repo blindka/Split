@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,7 +66,6 @@ fun SplitLayout() {
     val amount = amountInput.toDoubleOrNull() ?: 0.0
     val tip = calculateTip(amount, tipPercent)
 
-
     Column(
         modifier = Modifier
             .statusBarsPadding()
@@ -87,7 +87,10 @@ fun SplitLayout() {
             onValueChange = { amountInput = it },
             modifier = Modifier
                 .padding(bottom = 32.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next)
         )
         EditNumberField(
             label = R.string.how_was_the_service,
@@ -95,7 +98,11 @@ fun SplitLayout() {
             onValueChange = { tipInput = it },
             modifier = Modifier
                 .padding(bottom = 32.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            )
         )
         Text(
             text = stringResource(R.string.tip_amount, tip),
@@ -113,6 +120,7 @@ private fun calculateTip(amount: Double, tipPercent: Double = 10.0): String {
 fun EditNumberField(
     @StringRes label: Int,
     value: String,
+    keyboardOptions: KeyboardOptions,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -121,7 +129,7 @@ fun EditNumberField(
         onValueChange = onValueChange,
         singleLine = true,
         label = { Text(stringResource(label)) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        keyboardOptions = keyboardOptions,
         shape = RoundedCornerShape(16.dp),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent, // color of underline when it is in focus (user press the box and typing)
