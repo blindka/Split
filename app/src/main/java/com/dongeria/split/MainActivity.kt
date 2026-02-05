@@ -39,7 +39,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dongeria.split.ui.theme.SplitTheme
 import java.text.NumberFormat
-
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Switch
+import androidx.compose.foundation.layout.wrapContentWidth
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,10 +64,11 @@ class MainActivity : ComponentActivity() {
 fun SplitLayout() {
     var amountInput by remember { mutableStateOf("") }
     var tipInput by remember { mutableStateOf("") }
+    var roundUp by remember { mutableStateOf(false) }
     val tipPercent = tipInput.toDoubleOrNull() ?: 0.0
 
     val amount = amountInput.toDoubleOrNull() ?: 0.0
-    val tip = calculateTip(amount, tipPercent)
+    val tip = calculateTip(amount, tipPercent, roundUp)
 
     Column(
         modifier = Modifier
@@ -104,6 +108,11 @@ fun SplitLayout() {
                 imeAction = ImeAction.Done
             )
         )
+        RoundTheTipRow(
+            roundUp = roundUp,
+            onRoundUpChanged = { roundUp = it },
+            modifier = Modifier.padding(bottom = 32.dp)
+        )
         Text(
             text = stringResource(R.string.tip_amount, tip),
             fontSize = 25.sp,
@@ -112,8 +121,11 @@ fun SplitLayout() {
         Spacer(modifier = Modifier.height(150.dp))
     }
 }
-private fun calculateTip(amount: Double, tipPercent: Double = 10.0): String {
-    val tip = amount * tipPercent / 100
+private fun calculateTip(amount: Double, tipPercent: Double = 15.0, roundUp: Boolean): String {
+    var tip = tipPercent / 100 * amount
+    if (roundUp) {
+        tip = kotlin.math.ceil(tip)
+    }
     return NumberFormat.getCurrencyInstance().format(tip)
 }
 @Composable
@@ -142,7 +154,26 @@ fun EditNumberField(
         )
     )
 }
-
+@Composable
+fun RoundTheTipRow(
+    roundUp: Boolean,
+    onRoundUpChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = stringResource(R.string.round_up_tip))
+        Switch(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentWidth(Alignment.End),
+            checked = roundUp,
+            onCheckedChange = onRoundUpChanged
+        )
+    }
+}
 @Preview(showBackground = true)
 @Composable
 fun SplitLayoutPreview() {
