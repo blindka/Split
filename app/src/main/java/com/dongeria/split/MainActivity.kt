@@ -40,9 +40,16 @@ import androidx.compose.ui.unit.sp
 import com.dongeria.split.ui.theme.SplitTheme
 import java.text.NumberFormat
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Switch
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.annotation.DrawableRes
+import androidx.compose.material3.Icon
+import androidx.compose.ui.res.painterResource
+import java.util.Locale
+import java.util.Currency
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,6 +94,7 @@ fun SplitLayout() {
         )
         EditNumberField(
             label = R.string.bill_amount,
+            leadingIcon = R.drawable.money,
             value = amountInput,
             onValueChange = { amountInput = it },
             modifier = Modifier
@@ -98,6 +106,7 @@ fun SplitLayout() {
         )
         EditNumberField(
             label = R.string.how_was_the_service,
+            leadingIcon = R.drawable.percent,
             value = tipInput,
             onValueChange = { tipInput = it },
             modifier = Modifier
@@ -126,11 +135,12 @@ private fun calculateTip(amount: Double, tipPercent: Double = 15.0, roundUp: Boo
     if (roundUp) {
         tip = kotlin.math.ceil(tip)
     }
-    return NumberFormat.getCurrencyInstance().format(tip)
+    return NumberFormat.getCurrencyInstance(Locale("iw", "IL")).format(tip) // defines the output sign of the bill
 }
 @Composable
 fun EditNumberField(
     @StringRes label: Int,
+    @DrawableRes leadingIcon: Int,
     value: String,
     keyboardOptions: KeyboardOptions,
     onValueChange: (String) -> Unit,
@@ -138,6 +148,7 @@ fun EditNumberField(
 ) {
     TextField(
         value = value,
+        leadingIcon = { Icon(painter = painterResource(id = leadingIcon), null) },
         onValueChange = onValueChange,
         singleLine = true,
         label = { Text(stringResource(label)) },
