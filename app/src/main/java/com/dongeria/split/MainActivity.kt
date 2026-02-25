@@ -48,8 +48,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.material3.Icon
 import androidx.compose.ui.res.painterResource
 import java.util.Locale
-import java.util.Currency
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -135,7 +133,9 @@ private fun calculateTip(amount: Double, tipPercent: Double = 15.0, roundUp: Boo
     if (roundUp) {
         tip = kotlin.math.ceil(tip)
     }
-    return NumberFormat.getCurrencyInstance(Locale("iw", "IL")).format(tip) // defines the output sign of the bill
+    return NumberFormat.getCurrencyInstance(
+        Locale.forLanguageTag("he-IL")
+    ).format(tip) // defines the output sign of the bill
 }
 @Composable
 fun EditNumberField(
