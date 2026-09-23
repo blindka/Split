@@ -128,12 +128,15 @@ fun SplitLayout() {
 }
 private fun calculateTip(amount: Double, tipPercent: Double = 15.0, roundUp: Boolean): String {
     var tip = tipPercent / 100 * amount
+
     if (roundUp) {
-        tip = kotlin.math.ceil(tip)
+        val fraction = tip - kotlin.math.floor(tip)
+        if (fraction > 0.55) {
+            tip = kotlin.math.ceil(tip)
+        }
     }
-    return NumberFormat.getCurrencyInstance(
-        Locale.forLanguageTag("he-IL")
-    ).format(tip) // defines the output sign of the bill
+
+    return NumberFormat.getCurrencyInstance(Locale.forLanguageTag("he-IL")).format(tip)
 }
 @Composable
 fun EditNumberField(
