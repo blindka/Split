@@ -46,6 +46,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.material3.Icon
 import androidx.compose.ui.res.painterResource
 import java.util.Locale
+import kotlin.math.floor
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +69,7 @@ fun SplitLayout() {
     var amountInput by remember { mutableStateOf("") }
     var tipInput by remember { mutableStateOf("") }
     var roundUp by remember { mutableStateOf(false) }
-    val tipPercent = tipInput.toDoubleOrNull() ?: 0.0
+    val tipPercent = tipInput.toDoubleOrNull() ?: 15.0
 
     val amount = amountInput.toDoubleOrNull() ?: 0.0
     val tip = calculateTip(amount, tipPercent, roundUp)
@@ -133,10 +134,15 @@ private fun calculateTip(amount: Double, tipPercent: Double = 15.0, roundUp: Boo
         val fraction = tip - kotlin.math.floor(tip)
         if (fraction > 0.55) {
             tip = kotlin.math.ceil(tip)
+        } else {
+            tip = kotlin.math.floor(tip)
         }
     }
 
-    return NumberFormat.getCurrencyInstance(Locale.forLanguageTag("he-IL")).format(tip)
+    val formatter = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("he-IL"))
+    formatter.minimumFractionDigits = 0
+
+    return formatter.format(tip)
 }
 @Composable
 fun EditNumberField(
