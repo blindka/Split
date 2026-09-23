@@ -131,11 +131,11 @@ private fun calculateTip(amount: Double, tipPercent: Double = 15.0, roundUp: Boo
     var tip = tipPercent / 100 * amount
 
     if (roundUp) {
-        val fraction = tip - kotlin.math.floor(tip)
-        if (fraction > 0.55) {
-            tip = kotlin.math.ceil(tip)
+        val fraction = tip - floor(tip)
+        tip = if (fraction > 0.55) {
+            kotlin.math.ceil(tip)
         } else {
-            tip = kotlin.math.floor(tip)
+            floor(tip)
         }
     }
 
