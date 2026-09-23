@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="com.obiscr.chatgpt.settings.EasyCodeState">
+    <option name="projectFiles" value="$PROJECT_DIR$/app/src/androidTest/java/com/dongeria/split/ExampleInstrumentedTest.kt;/Users/eyalhaimov/AndroidStudioProjects/Split/app/src/main/java/com/dongeria/split/ui/theme/Color.kt;/Users/eyalhaimov/AndroidStudioProjects/Split/app/src/main/java/com/dongeria/split/ui/theme/Theme.kt;/Users/eyalhaimov/AndroidStudioProjects/Split/app/src/main/java/com/dongeria/split/ui/theme/Type.kt;/Users/eyalhaimov/AndroidStudioProjects/Split/app/src/main/java/com/dongeria/split/MainActivity.kt;/Users/eyalhaimov/AndroidStudioProjects/Split/app/src/test/java/com/dongeria/split/ExampleUnitTest.kt;/Users/eyalhaimov/AndroidStudioProjects/Split/app/build.gradle.kts;/Users/eyalhaimov/AndroidStudioProjects/Split/build.gradle.kts;/Users/eyalhaimov/AndroidStudioProjects/Split/settings.gradle.kts" />
+  </component>
+</project>
