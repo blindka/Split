@@ -98,8 +98,8 @@ fun SplitLayout() {
         EditNumberField(
             label = R.string.bill_amount,
             leadingIcon = R.drawable.money,
-            value = amountInput,
-            onValueChange = { amountInput = it },
+            value = state.amountInput,
+            onValueChange = { state = state.copy(amountInput = it) },
             modifier = Modifier
                 .padding(bottom = 32.dp)
                 .fillMaxWidth(),
@@ -110,8 +110,8 @@ fun SplitLayout() {
         EditNumberField(
             label = R.string.how_was_the_service,
             leadingIcon = R.drawable.percent,
-            value = tipInput,
-            onValueChange = { tipInput = it },
+            value = state.tipInput,
+            onValueChange = { state = state.copy(tipInput = it) },
             modifier = Modifier
                 .padding(bottom = 32.dp)
                 .fillMaxWidth(),
@@ -121,8 +121,8 @@ fun SplitLayout() {
             )
         )
         RoundTheTipRow(
-            roundUp = roundUp,
-            onRoundUpChanged = { roundUp = it },
+            roundUp = state.roundUp,
+            onRoundUpChanged = { state = state.copy(roundUp = it) },
             modifier = Modifier.padding(bottom = 32.dp)
         )
         Text(
