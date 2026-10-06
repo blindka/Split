@@ -66,13 +66,19 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun SplitLayout() {
-    var amountInput by remember { mutableStateOf("") }
-    var tipInput by remember { mutableStateOf("") }
-    var roundUp by remember { mutableStateOf(false) }
-    val tipPercent = tipInput.toDoubleOrNull() ?: 15.0
+    data class TipUiState(
+        val amountInput: String = "",
+        val tipInput: String = "",
+        val roundUp: Boolean = false
+    ) {
+        val amount: Double
+            get() = amountInput.toDoubleOrNull() ?: 0.0
 
-    val amount = amountInput.toDoubleOrNull() ?: 0.0
-    val tip = calculateTip(amount, tipPercent, roundUp)
+        val tipPercent: Double
+            get() = tipInput.toDoubleOrNull() ?: 15.0
+    }
+    var state by remember { mutableStateOf(TipUiState()) }
+    val tip = calculateTip(state.amount, state.tipPercent, state.roundUp)
 
     Column(
         modifier = Modifier
