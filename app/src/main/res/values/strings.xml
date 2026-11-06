@@ -5,4 +5,8 @@
     <string name="how_was_the_service">Tip Percentage</string>
     <string name="round_up_tip">Round up tip?</string>
     <string name="tip_amount">Tip Amount: %s</string>
+    <string name="split_between">Split between</string>
+    <string name="tip_label">Tip</string>
+    <string name="total_label">Total</string>
+    <string name="per_person_label">Per person</string>
 </resources>
