@@ -1,5 +1,7 @@
 package com.dongeria.split
 
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -40,6 +42,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,6 +60,21 @@ import kotlin.math.ceil
 private val TIP_PRESETS = listOf(10, 12, 15, 18)
 private const val DEFAULT_TIP_PERCENT = 12.0
 private const val MAX_PEOPLE = 50
+
+/** SharedPreferences used to remember the last tip percentage between app launches. */
+private const val PREFS_NAME = "split_prefs"
+private const val KEY_LAST_TIP = "last_tip_percent"
+
+private fun loadLastTip(context: Context): String =
+    context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        .getString(KEY_LAST_TIP, "") ?: ""
+
+private fun saveLastTip(context: Context, tip: String) {
+    context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        .edit()
+        .putString(KEY_LAST_TIP, tip)
+        .apply()
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,9 +109,12 @@ fun calculateTip(
     return TipResult(tip = tip, total = total, perPerson = total / people.coerceAtLeast(1))
 }
 
-/** Keeps only digits and a single decimal point (max 2 decimals). */
-private fun sanitizeNumber(input: String): String {
-    val filtered = input.filter { it.isDigit() || it == '.' }
+/**
+ * Keeps only digits and a single decimal point (max 2 decimals).
+ * A comma is treated as a decimal point, since some keyboards use it.
+ */
+internal fun sanitizeNumber(input: String): String {
+    val filtered = input.replace(',', '.').filter { it.isDigit() || it == '.' }
     val dot = filtered.indexOf('.')
     if (dot == -1) return filtered
     val intPart = filtered.substring(0, dot)
@@ -105,7 +126,13 @@ private fun sanitizeNumber(input: String): String {
 fun SplitLayout() {
     // rememberSaveable keeps the values when the screen rotates.
     var amountInput by rememberSaveable { mutableStateOf("") }
-    var tipInput by rememberSaveable { mutableStateOf("") }
+    val context = LocalContext.current
+    // The last tip percentage is loaded from SharedPreferences on first launch.
+    var tipInput by rememberSaveable { mutableStateOf(loadLastTip(context)) }
+    val updateTip: (String) -> Unit = { newTip ->
+        tipInput = newTip
+        saveLastTip(context, newTip)
+    }
     var roundUp by rememberSaveable { mutableStateOf(false) }
     var people by rememberSaveable { mutableIntStateOf(1) }
 
@@ -147,14 +174,14 @@ fun SplitLayout() {
             leadingIcon = R.drawable.percent,
             value = tipInput,
             placeholder = "${DEFAULT_TIP_PERCENT.toInt()}",
-            onValueChange = { tipInput = sanitizeNumber(it) },
+            onValueChange = { updateTip(sanitizeNumber(it)) },
             imeAction = ImeAction.Done,
             modifier = Modifier.fillMaxWidth()
         )
 
         TipPresetChips(
             selected = tipInput.toDoubleOrNull(),
-            onSelect = { tipInput = it.toString() }
+            onSelect = { updateTip(it.toString()) }
         )
 
         PeopleStepper(
@@ -282,7 +309,13 @@ private fun ResultRow(label: String, value: String) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(name = "Light", showBackground = true)
+@Preview(
+    name = "Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL
+)
+@Preview(name = "Hebrew (RTL)", showBackground = true, locale = "iw")
 @Composable
 fun SplitLayoutPreview() {
     SplitTheme {

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Split</string>
+    <string name="calculate_tip">חישוב טיפ</string>
+    <string name="bill_amount">סכום החשבון</string>
+    <string name="how_was_the_service">אחוז טיפ</string>
+    <string name="round_up_tip">לעגל את הטיפ למעלה?</string>
+    <string name="tip_amount">סכום הטיפ: %s</string>
+    <string name="split_between">חלוקה בין</string>
+    <string name="tip_label">טיפ</string>
+    <string name="total_label">סה״כ</string>
+    <string name="per_person_label">לכל אחד</string>
+</resources>
